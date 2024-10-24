@@ -22,6 +22,17 @@ resource "aws_subnet" "main1" {
     Name = "Main1"
   }
 }
+
+resource "aws_subnet" "main2" {
+  vpc_id     = aws_vpc.test.id
+  cidr_block = "10.0.2.0/24"
+  availability_zone ="ap-south-1b"
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "Main2"
+  }
+}
 resource "aws_internet_gateway" "IGW" {
   vpc_id = aws_vpc.test.id
 
@@ -63,6 +74,7 @@ resource "aws_instance" "Machine1" {
    #!/bin/bash
    sudo yum install httpd -y
    sudo service httpd start
+   sudo yum install mysql -y
   EOF
 }
 
@@ -109,14 +121,42 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
   ip_protocol       = "tcp"
   to_port           = 22
 }
+
+resource "aws_vpc_security_group_ingress_rule" "ssh" {
+  security_group_id = aws_security_group.new_sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 3306
+  ip_protocol       = "tcp"
+  to_port           = 3306
+}
 resource "aws_vpc_security_group_egress_rule" "allow_all_traffic" {
   security_group_id = aws_security_group.new_sg.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1"
 }
 
+resource "aws_db_subnet_group" "db_subnet" {
+  name = "test"
+  subnet_ids = [aws_subnet.main1.id ,aws_subnet.main2.id]
+  
+}
 
 
+resource "aws_db_instance" "rds_test" {
+  allocated_storage    = 5
+  db_name              = "mydb"
+  engine               = "mysql"
+  engine_version       = "8.0"
+  instance_class       = "db.t3.micro"
+  username             = "admin"
+  password             = "admin123"
+  skip_final_snapshot  = true
+  identifier           =  "database1"
+  vpc_security_group_ids = [aws_security_group.new_sg.id] 
+  db_subnet_group_name =  aws_db_subnet_group.db_subnet.name
+  storage_type         = "gp2"
+  publicly_accessible = false
+}
 
 
 
