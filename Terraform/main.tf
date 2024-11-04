@@ -54,7 +54,7 @@ resource "aws_route_table_association" "a" {
   route_table_id = aws_route_table.Public_RT.id
 }
 
-resource "aws_instance" "Machine1" {
+resource "aws_instance" "Machine2" {
   ami           = "ami-0e0e417dfa2028266"
   instance_type = "t2.micro"
   key_name = aws_key_pair.key.key_name
@@ -62,7 +62,7 @@ resource "aws_instance" "Machine1" {
   vpc_security_group_ids = [aws_security_group.new_sg.id]
 
   tags = {
-    Name = "Machine1"
+    Name = "Machine2"
   }
 
   root_block_device {
@@ -70,12 +70,8 @@ resource "aws_instance" "Machine1" {
      volume_size = 8
   }
 
-  user_data = <<EOF
-   #!/bin/bash
-   sudo yum install httpd -y
-   sudo service httpd start
-   sudo yum install mysql -y
-  EOF
+  user_data = ${file("user_data_httpd.sh")}
+
 }
 
 resource "local_file" "key" {
@@ -124,7 +120,7 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
 
 resource "aws_vpc_security_group_ingress_rule" "ssh" {
   security_group_id = aws_security_group.new_sg.id
-  cidr_ipv4         = "0.0.0.0/0"
+  cidr_ipv4         = [aws_instance.Machine2.public_ip + "/32"]
   from_port         = 3306
   ip_protocol       = "tcp"
   to_port           = 3306
