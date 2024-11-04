@@ -120,7 +120,7 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
 
 resource "aws_vpc_security_group_ingress_rule" "rsa" {
   security_group_id = aws_security_group.new_sg.id
-  cidr_ipv4         = "${aws_instance.Machine2.public_ip}/32"
+  cidr_ipv4         = "${aws_instance.Machine2.private_ip}/32"
   from_port         = 3306
   ip_protocol       = "tcp"
   to_port           = 3306
