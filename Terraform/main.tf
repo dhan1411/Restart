@@ -1,3 +1,12 @@
+terraform {
+ backend "s3" {
+    bucket = "dhan1411"
+    key    = "/root/Terraform/main.tf"
+    region = "ap-south-1"
+  }
+
+}
+
 provider "aws" {
   region = "ap-south-1"
   access_key = var.access_key
@@ -155,4 +164,6 @@ resource "aws_db_instance" "rds_test" {
 }
 
 
-
+module "s3" {
+  source = "./S3"
+}
