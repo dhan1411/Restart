@@ -3,6 +3,7 @@ terraform {
     bucket = "dhan1411"
     key    = "/root/Terraform/main.tf"
     region = "ap-south-1"
+    dynamodb_table = "terraform_lock_id"
   }
 
 }
