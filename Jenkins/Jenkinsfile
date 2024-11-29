@@ -1,0 +1,28 @@
+pipeline {
+
+    agent none
+
+environment {
+
+    AWS_credentials = credentials("AWS_credentials_id")
+}
+
+stages {
+
+stage ("Terraform") {
+
+     agent {
+             node {
+                    label "built-in"
+                    customWorkspace "/mnt/Terraform"
+                  }
+}
+
+steps {
+      sh """ terraform init
+             terraform plan
+             terraform apply--auto-approve"""
+      }
+    }
+}
+}
