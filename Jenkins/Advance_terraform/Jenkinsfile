@@ -30,7 +30,7 @@ pipeline {
 	 stage("Terraform_infra_creation") {
          steps {
           
-	  dir ('/mnt/Restart/Jenkins/jenkins_advance')
+	  dir ('/mnt/Restart/Jenkins/Advance_terraform/jenkins_advance')
 	  sh '''
 	  terraform init
 	  terraform plan
