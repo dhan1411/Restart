@@ -11,7 +11,7 @@ resource "aws_db_instance" "server_db" {
   db_name              = var.db_name
   engine               = "mysql"
   engine_version       = "8.0"
-  db_subnet_group_name = aws_db_subnet_group.subnet_group
+  db_subnet_group_name = aws_db_subnet_group.subnet_group.name
   availability_zone    = var.availability_zone
   instance_class       = var.instance_type
   storage_type         = var.storage_type 
