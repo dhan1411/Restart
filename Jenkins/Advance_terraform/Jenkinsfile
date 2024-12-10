@@ -1,0 +1,44 @@
+pipeline {
+
+         agent { 
+
+	 node {
+
+	 label "built-in"
+	 customWorkspace "/mnt
+
+	 }
+	 }
+
+	 environment {
+
+	 AWS_credentials = credentials{("AWS_credentials_id")
+         
+	 }
+
+	 stages {
+
+	 stage("Checkout") {
+
+	 steps {
+             
+	     git branch : "master" , url : "https://github.com/dhan1411/Restart.git"
+	 }
+
+	 }
+
+	 stage("Terraform_infra_creation") {
+         steps {
+          
+	  dir ('/mnt/Restart/Jenkins/jenkins_advance')
+	  sh '''
+	  terraform init
+	  terraform plan
+	  terraform apply --auto-approve'''
+
+	 }
+	 }
+
+
+
+
