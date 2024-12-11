@@ -22,7 +22,7 @@ variable "db_name" {
 default = "server_db"
 }
 variable "instance_type" {
-default = "db.t2.micro"    
+default = "db.t3.micro"    
 
 }
 variable "storage_type" {
